@@ -48,3 +48,4 @@ AND Orders.totalUSD>=500.00;
 SELECT Orders.ordno
 FROM Orders
 WHERE Orders.cid='C005';
+-- Slightly wrong: C should be lowercase--
