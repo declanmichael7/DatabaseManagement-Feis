@@ -8,11 +8,17 @@ from agents, orders
 where agents.aid = orders.aid
 and orders.cid = 'c006';
 
-/* 2--COME BACK TO THIS
+--2--
 select distinct orders.pid
-from customers, orders
-where orders.cid = customers.cid
-*/
+from orders
+where orders.aid in (
+	select orders.aid
+	from orders, customers
+	where orders.cid = customers.cid
+	and customers.city = 'Beijing';
+	)
+order by orders.pid desc;
+
 
 --3--
 select customers.cid, customers.name
@@ -41,4 +47,31 @@ and orders.cid in (
 ;
 
 --5--
+select orders.pid
+from orders
+where orders.cid not in (
+	select orders.cid
+	from orders
+	where orders.aid in ('a02','a03')
+	)
+order by orders.pid desc
+;
+
+--6--
+select customers.name, customers.city, customers.discountPct
+from customers
+where customers.cid in (
+	select orders.cid
+	from orders
+	where orders.aid in (
+		select agents.aid
+		from agents
+		where agents.city in ('Tokyo','New York')
+		)
+	)
+;
+
+--7--
+
+
 
