@@ -72,6 +72,18 @@ where customers.cid in (
 ;
 
 --7--
+select *
+from customers
+where customers.discountPct in (
+	select customers.discountPct
+	from customers
+	where customers.city = 'Dallas'
+	or customers.city = 'Duluth'
+	)
+;
 
-
+--8--
+/* Check constraints are things that restrict data that you can input into a database. T into certain values. They are very useful when
+you want to enforce that a field has certain values other than just 'yes' or 'no'. They're good to put into the database because no 
+matter how An example of a good check constraint is 
 
