@@ -84,6 +84,9 @@ where customers.discountPct in (
 
 --8--
 /* Check constraints are things that restrict data that you can input into a database. T into certain values. They are very useful when
-you want to enforce that a field has certain values other than just 'yes' or 'no'. They're good to put into the database because no 
-matter how An example of a good check constraint is 
+you want to enforce that a field has certain values other than just 'yes' or 'no'. They're good to put into the database because it is
+impossible for a check constraint to be worked around, so they are absolute gaurantee to have a certain set of possible values.
+An example of a good check constraint is something that has multiple values, and is not subject to change, such as postal codes. 
+A bad check constraint is something that could be ambiguous or subject to change, such as a job position. New positions could be added, 
+or a person may perform multiple roles in a business.
 
