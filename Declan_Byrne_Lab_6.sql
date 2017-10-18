@@ -24,3 +24,11 @@ Order by p.name DESC;
     
 --3--
 
+SELECT c.name, sum(o.totalUSD) as total, o.pid
+FROM Orders as O, Customers as C
+where o.cid=c.cid
+GROUP BY c.name, o.pid
+Order by total desc;
+
+--4--
+
