@@ -50,3 +50,23 @@ And a.aid=o.aid
 And a.city='Newark'; 
 
 --6--
+-- 1017 should also be showing up, since I can see by the inner query that the prices don't match, but I can't figure out how to make
+-- it check it to match the price to the ordno, not just check to see if it's in the set--
+Select *
+From Orders as O
+Where o.totalUSD not in (
+	Select round(p.priceUSD*(1-(c.discountpct/100))*o.quantity, 2) as correct_price
+	From Orders as O, Products as P, Customers as C
+	Where O.cid = C.cid
+	And O.pid = P.pid
+	)
+	
+--7--
+
+/* An outer join, unlike an inner join, will display rows even if they don't match. The only difference between a left and right outer
+join is which table's rows are being shown when the rows don't match. If you use a left outer join, it will show all matches between the
+two tables and the rest of the rows for the table on the left of the join statement. The opposite is true for a right outer join*/
+
+
+
+
