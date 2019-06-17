@@ -1,0 +1,289 @@
+DROP TABLE IF EXISTS Taught;
+DROP TABLE IF EXISTS School;
+DROP TABLE IF EXISTS Competes_Beginner;
+DROP TABLE IF EXISTS Competes_Prizewinner;
+DROP TABLE IF EXISTS Competes_Preliminary;
+DROP TABLE IF EXISTS Competes_Open;
+DROP TABLE IF EXISTS Competition;
+DROP TABLE IF EXISTS Judge;
+DROP TABLE IF EXISTS Plays;
+DROP TABLE IF EXISTS Musician;
+DROP TABLE IF EXISTS Competitor;
+DROP TABLE IF EXISTS Feis;
+
+
+CREATE TABLE Feis (
+	FID			varchar(4),
+	FeisName		char(20) not null,
+	FeisDate		Date not null,
+	Organizer		char(30) not null, 
+	City			char(10) not null,
+   primary key(FID)
+);
+	
+CREATE TABLE School (
+	SID			varchar(4),
+	School_Name		char(30) not null,
+	Teacher_FName   	char(12) not null,
+	Teacher_LName   	varchar(15) not null,
+	Teacher_Cert_Year	int not null,
+   primary key(SID)
+);
+
+CREATE TABLE Judge (
+	JID			varchar(4),
+	FName			char(12) not null,
+	LName			varchar(15) not null,
+	Payment			Money not null,
+   primary key(JID)
+);
+
+CREATE TABLE Musician (
+	MID			varchar(4),
+	FName			char(12) not null,
+	LName			varchar(15) not null,
+	Instrument		char(12) not null,
+	Payment			Money not null,
+   primary key(MID)
+);
+
+CREATE TABLE Competition (
+	CompID			integer, 
+	Descript		varchar(25) not null,
+	FID			varchar(4) not null references Feis(FID),
+	JID			varchar(4) not null references Judge(JID),
+	MID			varchar(4) not null references Musician(MID),
+   primary key(CompID)
+);
+
+CREATE TABLE Competitor (
+	CID			varchar(4),
+	FName			char(12) not null,
+	LName			varchar(15) not null,
+	Gender			char(1) not null,
+	CompLevel		char(17) CHECK(CompLevel IN ('Beginner',  'Prizewinner', 'Preliminary', 'Open')) not null,
+	Phone			varchar(10) not null,
+	Date_of_Birth		date not null,
+   primary key(CID)
+);
+
+CREATE TABLE Taught (
+	CID			varchar(4) references Competitor(CID),
+	SID			varchar(4) references School(SID),
+	Join_Year		int not null,
+   primary key(CID, SID)
+);
+
+CREATE TABLE Competes_Beginner (
+	CID			varchar(4) references Competitor(CID),
+	CompID			integer references Competition(CompID),
+	Dance			char(10) not null CHECK( Dance IN ('Reel', 'Light_Jig', 'Slip_Jig')),
+	Place			integer not null,
+    primary key(CID, CompID)
+);
+
+CREATE TABLE Competes_Prizewinner (
+	CID			varchar(4) references Competitor(CID),
+	CompID			integer references Competition(CompID),
+	Dance			char(10) not null CHECK( Dance IN ('Reel', 'Slip_Jig', 'Light_Jig', 'Treble_Jig', 'Hornpipe')),
+	Place			integer not null,
+    primary key(CID, CompID)
+);
+
+CREATE TABLE Competes_Preliminary (
+	CID			varchar(4) references Competitor(CID),
+	CompID			integer references Competition(CompID),
+	Hardshoe		char(10) not null CHECK(Hardshoe IN ('Treble_Jig', 'Hornpipe')),
+	Softshoe		char(8) not null CHECK(Softshoe IN ('Slip_Jig', 'Reel')),
+	Place			integer not null,
+    primary key(CID, CompID)
+);
+
+CREATE TABLE Competes_Open (
+	CID			varchar(4) references Competitor(CID),
+	CompID			integer references Competition(CompID),
+	Hardshoe		char(10) not null CHECK(Hardshoe IN ('Treble_Jig', 'Hornpipe')),
+	Softshoe		char(8) not null CHECK(Softshoe IN ('Slip_Jig', 'Reel')),
+	SetDance		char(37) not null,
+	Place			integer not null,
+    primary key(CID, CompID)
+);
+
+
+CREATE TABLE Plays (
+	MID			varchar(4) references Musician(MID),
+	Song			char(17) not null,
+   primary key(MID, Song)
+);
+
+
+INSERT INTO Competitor(CID, FName, LName, Gender, CompLevel, Phone, Date_of_Birth)
+VALUES  ('c001', 'Declan', 'Byrne', 'M', 'Preliminary', '6687325686', '1997-11-19'),
+	('c002', 'Alan', 'Labouseur', 'M', 'Beginner', '2232832623', '1968-03-17'),
+	('c003', 'Peter', 'Hannon', 'M', 'Preliminary', '6976666283', '1999-08-14'),
+	('c004', 'Brianna', 'D''Amico', 'F', 'Open', '8434255929', '1996-11-28'),
+	('c005', 'Christina', 'Harrick', 'F', 'Prizewinner', '8726733728', '1997-11-06'),
+	('c006', 'Dylan', 'O''Brien', 'M', 'Preliminary', '8463243251', '1998-12-13'),
+	('c007', 'Tom', 'Vestuto', 'M', 'Beginner', '8463243251', '1999-06-22'),
+	('c008', 'Katie', 'Kilcullen', 'F', 'Prizewinner', '212735521', '1996-09-03'),
+	('c009', 'Anna', 'Wilson', 'F', 'Beginner', '1373746261', '1994-05-06'),
+	('c010', 'Mary', 'Pulizzotto', 'F', 'Preliminary', '1658945612', '1997-05-03'),
+	('c011', 'Kyle', 'Meit', 'M', 'Open', '4868464866', '1995-03-21'),
+	('c012', 'Hayley', 'Petrizzi', 'F', 'Prizewinner', '1686549732', '1999-06-21'),
+	('c013', 'Jean', 'Abecassis', 'M', 'Prizewinner', '5948626573', '1994-03-16'),
+	('c014', 'Patrick', 'Lombardi', 'M', 'Beginner', '6845257954', '1994-02-19'),
+	('c015', 'Charles', 'Beers', 'M', 'Open', '6859432495', '1996-03-12'),
+	('c016', 'Jill', 'Craig', 'F', 'Preliminary', '6584326879', '1998-02-26'),
+	('c017', 'Megan', 'Le', 'F', 'Preliminary', '4625978164', '1997-05-19'),
+	('c018', 'Katarina', 'Mueller', 'F', 'Open', '6435942801', '1996-08-15');
+	
+INSERT INTO Judge(JID, FName, LName, Payment)
+VALUES  ('j001', 'Kevin', 'Dobrowolski', 500.00),
+	('j002', 'Liam', 'Ollive', 350.00),
+	('j003', 'Nick', 'Lange', 400.00),
+	('j004', 'Matt', 'Batory', 400.00),
+	('j005', 'Liam', 'Cullen', 550.00),
+	('j006', 'Ryan', 'Parbs', 350.00);
+
+INSERT INTO Musician (MID, FName, LName, Instrument, Payment)
+VALUES  ('m001', 'Daniel', 'Squicciarino', 'Tin_Whistle', 500.00),
+	('m002', 'Alex', 'Sarbin', 'Accordion', 400.00),
+	('m003', 'Mike', 'Yelovitch', 'Fiddle', 450.00),
+	('m004', 'Kenny', 'Marples', 'Keyboard', 500.00),
+	('m005', 'Elena', 'Pileh', 'Keyboard', 450.00);
+
+INSERT INTO School (SID, School_Name, Teacher_FName, Teacher_LName, Teacher_Cert_Year)
+VALUES  ('s01', 'Donny_Golden', 'Donny', 'Golden', 1963),
+	('s02', 'Mulvihill', 'Michelle', 'Byrne', 2012),
+	('s03', 'Doherty_Petri', 'Melanie', 'Deegan', 2003),
+	('s04', 'Schade_Academy', 'Mary_Lou', 'Schade', 1997),
+	('s05', 'Hagen', 'Claire', 'O''Brien', 1982),
+	('s06', 'Shea_Jennings', 'Caitlin', 'Ward', 1978);
+
+INSERT INTO Taught (CID, SID, Join_Year)
+VALUES  ('c001','s01', 2003),
+	('c003','s01', 2006),
+	('c003','s04', 2009),
+	('c004','s05', 2005),
+	('c006','s02', 2014),
+	('c006','s01', 2016),
+	('c007','s03', 2004),
+	('c008','s05', 2000),
+	('c009','s02', 2015),
+	('c009','s01', 2007),
+	('c010','s05', 2002),
+	('c011','s04', 2011),
+	('c012','s01', 2013),
+	('c013','s03', 2016),
+	('c014','s05', 2007),
+	('c014','s02', 2014),
+	('c015','s04', 2013),
+	('c016','s03', 2008),
+	('c017','s05', 2006),
+	('c018','s03', 2005),
+	('c018','s04', 2010);
+	
+INSERT INTO Plays (MID, Song)
+VALUES  ('m001', 'Slip_Jig'),
+	('m001', 'Light_Jig'),
+	('m001', 'Reel'),
+	('m001', 'Treble_Jig'),
+	('m002', 'Slip_Jig'),
+	('m002', 'Light_Jig'),
+	('m002', 'Reel'),
+	('m002', 'Hornpipe'),
+	('m002', 'Treble_Jig'),
+	('m003', 'Slip_Jig'),
+	('m003', 'Hornpipe'),
+	('m004', 'Slip_Jig'),
+	('m004', 'Reel'),
+	('m004', 'Hornpipe'),
+	('m004', 'Treble_Jig'),
+	('m005', 'Treble_Jig'),
+	('m005', 'Reel');
+
+INSERT INTO Feis (FID, FeisName, FeisDate, Organizer, City)
+VALUES  ('f001', 'Inis_Fada', '2017-09-15', 'Donny_Golden', 'Mineola'),
+	('f002', 'Big_Apple', '2017-10-02', 'Irish_American_Society', 'Manhattan'),
+	('f003', 'AOH_Feis', '2017-11-27', 'Ancient_Order_of_Hibernians', 'Long_Beach');
+
+INSERT INTO Competition (CompID, Descript, FID, JID, MID)
+VALUES  (100, 'Beginner_Reel', 'f001', 'j001', 'm004'),
+	(101, 'Prizewinner_Treble_Jig', 'f001', 'j002', 'm005'),
+	(102, 'Prizewinner_Hornpipe', 'f001', 'j001', 'm003'),
+	(103, 'Prizewinner_Slip_Jig', 'f001', 'j003', 'm004'),
+	(104, 'Preliminary_Mens', 'f001', 'j005', 'm002'),
+	(105, 'Preliminary_Womens', 'f001', 'j003', 'm004'),
+	(106, 'Open_Mens', 'f001', 'j005', 'm004'),
+	(107, 'Open_Womens', 'f001', 'j002', 'm002'),
+	(108, 'Beginner_Light_Jig', 'f002', 'j004', 'm001'),
+	(109, 'Beginner_Slip_Jig', 'f002', 'j004', 'm005'),
+	(110, 'Beginner_Reel', 'f002', 'j006', 'm001'),
+	(111, 'Preliminary_Mens', 'f002', 'j001', 'm005'),
+	(112, 'Preliminary_Womens', 'f002', 'j002', 'm002'),
+	(113, 'Prizewinnner_Light_Jig', 'f003', 'j006', 'm003'),
+	(114, 'Prizewinner_Reel', 'f003', 'j005', 'm001'),
+	(115, 'Prizewinner_Treble_Jig', 'f003', 'j003', 'm002'),
+	(116, 'Prizewinner_Hornpipe', 'f003', 'j004', 'm005'),
+	(117, 'Open_Mens', 'f003', 'j004', 'm002'),
+	(118, 'Open_Womens', 'f003', 'j001', 'm004');
+
+INSERT INTO Competes_Beginner (CID, CompID, Dance, Place)
+VALUES  ('c009', 100, 'Reel', 1),
+	('c007', 100, 'Reel', 2),
+	('c002', 100, 'Reel', 3),
+	('c014', 108, 'Light_Jig', 1),
+	('c009', 108, 'Light_Jig', 2),
+	('c002', 108, 'Light_Jig', 3),
+	('c009', 109, 'Slip_Jig', 1),
+	('c014', 109, 'Slip_Jig', 2),
+	('c002', 109, 'Slip_Jig', 3),
+	('c007', 110, 'Reel', 1),
+	('c009', 110, 'Reel', 2),
+	('c014', 110, 'Reel', 3),
+	('c002', 110, 'Reel', 4);
+
+	
+INSERT INTO Competes_Prizewinner (CID, CompID, Dance, Place)
+VALUES  ('c008', 101, 'Treble_Jig', 1),
+	('c013', 101, 'Treble_Jig', 2),
+	('c005', 101, 'Treble_Jig', 3),
+	('c012', 101, 'Treble_Jig', 4),
+	('c013', 102, 'Hornpipe', 1),
+	('c005', 102, 'Hornpipe', 2),
+	('c012', 102, 'Hornpipe', 3),
+	('c012', 103, 'Slip_Jig', 1),
+	('c008', 103, 'Slip_Jig', 2),
+	('c013', 103, 'Slip_Jig', 3),
+	('c012', 113, 'Light_Jig', 1),
+	('c008', 113, 'Light_Jig', 2),
+	('c005', 114, 'Reel', 1),
+	('c012', 114, 'Reel', 2),
+	('c008', 114, 'Reel', 3),
+	('c013', 114, 'Reel', 4),
+	('c013', 115, 'Treble_Jig', 1),
+	('c005', 115, 'Treble_Jig', 2),
+	('c013', 116, 'Hornpipe', 1),
+	('c008', 116, 'Hornpipe', 2),
+	('c005', 116, 'Hornpipe', 3),
+	('c012', 116, 'Hornpipe', 4);
+
+INSERT INTO Competes_Preliminary (CID, CompID, Hardshoe, Softshoe, Place)
+VALUES  ('c001', 104, 'Hornpipe', 'Reel', 1),
+	('c003', 104, 'Treble_Jig', 'Reel', 2),
+	('c006', 104, 'Hornpipe', 'Reel', 3),
+	('c010', 105, 'Hornpipe', 'Slip_Jig', 1),
+	('c017', 105, 'Treble_Jig', 'Reel', 2),
+	('c006', 111, 'Hornpipe', 'Reel', 1),
+	('c001', 111, 'Treble_Jig', 'Reel', 2),
+	('c016', 112, 'Treble_Jig', 'Slip_Jig', 1),
+	('c010', 112, 'Hornpipe', 'Reel', 2);
+
+INSERT INTO Competes_Open (CID, CompID, Hardshoe, Softshoe, SetDance, Place)
+VALUES  ('c011', 106, 'Treble_Jig', 'Reel', 'Three_Sea_Captains', 1),
+	('c018', 107, 'Treble_Jig', 'Slip_Jig', 'The_Wandering_Musician', 1),
+	('c004', 107, 'Hornpipe', 'Reel', 'The_Blackthorn_Stick', 2),
+	('c015', 117, 'Hornpipe', 'Reel', 'Jockey_to_the_Fair', 1),
+	('c011', 117, 'Treble_Jig', 'Reel', 'Madame_Bonaparte', 2),
+	('c018', 118, 'Hornpipe', 'Slip_Jig', 'The_Downfall_of_Paris', 1),
+	('c004', 118, 'Treble_Jig', 'Slip_Jig', 'King_of_the_Fairies', 2);
